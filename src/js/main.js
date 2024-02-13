@@ -1,56 +1,32 @@
 import './../scss/style.scss'
-let randomNumber;
 const compChoice = document.getElementById("computer-choice");
 const myChoice = document.getElementById("my-choice");
-const resultdisplay = document.getElementById("result");
+const resultDisplay = document.getElementById("result");
 const choices = document.querySelectorAll("button");
-let userChoice;
-let computerChoice;
-let result;
 
-choices.forEach(possiblechoice => possiblechoice.addEventListener("click", (e) => {
-  userChoice = e.target.id;
+const outcomes = {
+  rock: { win: "scissors", lose: "paper" },
+  paper: { win: "rock", lose: "scissors" },
+  scissors: { win: "paper", lose: "rock" }
+};
+
+choices.forEach(choice => choice.addEventListener("click", (e) => {
+  const userChoice = e.target.id;
   myChoice.innerHTML = userChoice;
-  generateComputerChoice();
-  getResult();
+  const computerChoice = generateComputerChoice();
+  const result = getResult(userChoice, computerChoice);
+  resultDisplay.innerHTML = result;
 }));
 
 function generateComputerChoice() {
-  randomNumber = Math.floor(Math.random() * choices.length) + 1;
-
-  if (randomNumber === 1) {
-    computerChoice = "rock";
-  }
-  if (randomNumber === 2) {
-    computerChoice = "paper";
-  }
-  if (randomNumber === 3) {
-    computerChoice = "scissors";
-  }
+  const randomNumber = Math.floor(Math.random() * choices.length);
+  const computerChoice = choices[randomNumber].id;
   compChoice.innerHTML = computerChoice;
+  return computerChoice;
 }
 
-function getResult() {
-  if (computerChoice === userChoice) {
-    result = "It's a draw";
-  }
-  if (computerChoice === "rock" && userChoice === "paper") {
-    result = "You win";
-  }
-  if (computerChoice === "rock" && userChoice === "scissors") {
-    result = "You lost";
-  }
-  if (computerChoice === "paper" && userChoice === "scissors") {
-    result = "You win";
-  }
-  if (computerChoice === "paper" && userChoice === "rock") {
-    result = "You lost";
-  }
-  if (computerChoice === "scissors" && userChoice === "paper") {
-    result = "You lost";
-  }
-  if (computerChoice === "scissors" && userChoice === "rock") {
-    result = "You win";
-  }
-  resultdisplay.innerHTML = result;
+function getResult(userChoice, computerChoice) {
+  if (userChoice === computerChoice) return "It's a draw";
+  if (outcomes[userChoice].win === computerChoice) return "You win";
+  return "You lost";
 }
